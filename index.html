@@ -36,6 +36,12 @@ a{color:inherit}
 .navlinks a{flex:1;text-align:center;text-decoration:none;font-size:14px;font-weight:500;padding:7px 8px;border:1px solid var(--line);border-radius:8px}
 .navlinks a:hover{background:var(--raise)}
 .navlinks a.sel{background:var(--ink);border-color:var(--ink);color:#fff}
+.nlink{display:flex;justify-content:space-between;align-items:center;text-decoration:none;font-size:14px;font-weight:500;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+.nlink:hover{border-color:var(--ink)}
+.nlink span{font:400 12px var(--mono);color:var(--muted)}
+.urlrow{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.urlrow label{font-size:13px;font-weight:500;color:var(--muted)}
+.urlrow input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
 .chs{display:flex;flex-direction:column;gap:6px;flex:1}
 .ch summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 6px;border-radius:8px}
 .ch summary::-webkit-details-marker{display:none}
@@ -219,6 +225,7 @@ textarea:focus,input:focus{background:var(--surface)}
     <a class="brand" href="#home"><span class="logo" aria-hidden="true"><i style="background:var(--c0)"></i><i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i><i style="background:var(--c4)"></i></span><b>ARENA Tracker</b></a>
     <input class="search" id="q" type="search" placeholder="Search weeks and notes  /" aria-label="Search weeks and notes" autocomplete="off">
     <div class="navlinks"><a href="#home" id="nav-home">Dashboard</a><a href="#journal" id="nav-journal">Journal</a></div>
+    <a class="nlink" id="notion-link" href="https://app.notion.com/p/ARENA-41274bc135b6801d947fffa9d7a5261c" target="_blank" rel="noopener">My Notion: ARENA <span>opens in new tab</span></a>
     <div class="chs" id="chs"></div>
     <div class="status" id="status" role="status" aria-live="polite"></div>
   </nav>
@@ -239,6 +246,8 @@ var START=new Date(2026,10,16), DAY=864e5, TARGET=11, KEY='arena-tracker-v2', TK
 var SITE='https://learn.arena.education/';
 var REPO='https://github.com/ARENA-education/ARENA_materials';
 var SLACK='https://info-arena.github.io/ARENA_img/slack.html';
+var NOTION='https://app.notion.com/p/ARENA-41274bc135b6801d947fffa9d7a5261c';
+function notionUrl(u){u=(u||'').trim();return /^https:\/\/([\w-]+\.)*notion\.(so|com|site)\//.test(u)?u:'';}
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var CH=[
  {id:0,name:'Fundamentals',from:1,to:7,url:SITE+'chapter0_fundamentals/',
@@ -608,7 +617,7 @@ function viewHome(){
   h+='<section class="card chart"><h2>Hours per week</h2>'+chart()+'<p class="note-s">Dashed line is the 11 h core week. Faded bars are under 10 h. Select a bar to open that week.</p></section>';
   h+='<section><h2>Milestones</h2><ul class="miles">'+MILES.map(function(m){return '<li><a href="#w'+m.w+'"'+(gw(m.w).d?' class="on"':'')+'>'+esc(m.t)+'</a></li>';}).join('')+'</ul></section>';
   if(su.d>=su.n)h+=setup;
-  h+='<section><h2>ARENA links</h2><div class="actions"><a class="btn" href="'+SITE+'" target="_blank" rel="noopener">Course site</a><a class="btn" href="'+REPO+'" target="_blank" rel="noopener">ARENA_materials on GitHub</a><a class="btn" href="'+SLACK+'" target="_blank" rel="noopener">Slack invite</a></div><p class="note-s">Found a mistake in the material? Report it in #errata on the Slack.</p></section>';
+  h+='<section><h2>Links</h2><div class="actions"><a class="btn primary" href="'+NOTION+'" target="_blank" rel="noopener">My Notion: ARENA</a><a class="btn" href="'+SITE+'" target="_blank" rel="noopener">Course site</a><a class="btn" href="'+REPO+'" target="_blank" rel="noopener">ARENA_materials on GitHub</a><a class="btn" href="'+SLACK+'" target="_blank" rel="noopener">Slack invite</a></div><p class="note-s">Found a mistake in the material? Report it in #errata on the Slack.</p></section>';
   return h;
 }
 
@@ -655,6 +664,9 @@ function viewWeek(n){
          :'<button class="btn" type="button" data-act="tstart" data-n="'+n+'">'+(T?'Timer runs on week '+T.w+'. Switch here':'Start study timer')+'</button>')
     +'</div></section>';
   if(rd.length)h+='<section class="card k'+c.id+'"><h2>Reading</h2><ul class="links">'+rd.map(function(r){return '<li><a href="'+r[1]+'" target="_blank" rel="noopener">'+esc(r[0])+'</a></li>';}).join('')+'</ul></section>';
+  var nu=notionUrl(g.u);
+  h+='<section class="card k'+c.id+'"><h2>Notion</h2><div class="actions">'+(nu?'<a class="btn primary" href="'+esc(nu)+'" target="_blank" rel="noopener">Open this week\'s page</a>':'')+'<a class="btn" href="'+NOTION+'" target="_blank" rel="noopener">ARENA workspace</a></div>'
+    +'<div class="urlrow"><label for="nurl">Notion page for this week</label><input id="nurl" type="url" inputmode="url" placeholder="Paste a Notion link" autocomplete="off" spellcheck="false" value="'+esc(g.u||'')+'">'+(g.u&&!nu?'<span class="hint">That is not a Notion link, so no button is shown.</span>':'')+'</div></section>';
   h+='</div></div>';
 
   h+='<section class="card"><h2>Five-line summary</h2><div class="sum">';
@@ -735,6 +747,7 @@ view.addEventListener('click',function(e){
   else if(act==='copycmd'){copy(b,b.getAttribute('data-v'));}
 });
 view.addEventListener('change',function(e){
+  if(e.target.id==='nurl'){render();return;}
   var k=e.target.getAttribute('data-step');
   if(k==null)return;
   var n=+e.target.getAttribute('data-w'),c=Object.assign({},gw(n).c);
@@ -744,6 +757,7 @@ view.addEventListener('change',function(e){
 view.addEventListener('input',function(e){
   var r=route(),t=e.target;if(r.v!=='week')return;
   if(t.id==='notes'){setW(r.n,{n:t.value},true);}
+  else if(t.id==='nurl'){setW(r.n,{u:t.value.trim()},true);}
   else if(t.hasAttribute('data-sum')){
     var s=(gw(r.n).s||[]).slice();while(s.length<5)s.push('');
     s[+t.getAttribute('data-sum')]=t.value;setW(r.n,{s:s},true);grow();
