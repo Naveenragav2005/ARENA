@@ -1,29 +1,16 @@
 <title>ARENA Tracker</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a course-site shell. Left rail lists the five chapters and 42 weeks; the main pane shows the dashboard, one week's workspace, or the journal. Each chapter owns one hue. */
+/* Layout: a bright course-site shell. Left rail lists five chapters and 42 weeks; the main pane shows the dashboard, a chapter overview, one week's workspace, or the journal. Each chapter owns one vivid hue, and the 42-cell week map is the page's signature. Single bright look by design. */
 :root{
-  --bg:#14161b; --surface:#1b1e25; --raise:#232730; --line:#2c313b;
-  --ink:#eceff4; --muted:#9aa3b0;
-  --gold:#ddb665; --on-gold:#1a1405; --good:#7ccf9b; --warn:#e8a26b;
-  --c0:#ddb665; --c1:#7fb2e8; --c2:#7ccf9b; --c3:#e8916f; --c4:#b79cf0;
+  --bg:#f6f7fb; --surface:#ffffff; --raise:#eef0f6; --line:#dde1eb;
+  --ink:#141a2e; --muted:#5a6377;
+  --good:#0f8a5a; --warn:#b4521a;
+  --c0:#f2a900; --c1:#2f6fed; --c2:#12a36b; --c3:#f0562e; --c4:#8b4be8;
+  --display:'Bricolage Grotesque','Instrument Sans',system-ui,sans-serif;
   --body:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
-  color-scheme:dark;
-}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
-  --bg:#f2f3f6; --surface:#ffffff; --raise:#e8eaef; --line:#d3d7df;
-  --ink:#171a20; --muted:#59626f;
-  --gold:#8a6508; --on-gold:#ffffff; --good:#1f7a46; --warn:#a4561a;
-  --c0:#8a6508; --c1:#2566b0; --c2:#1f7a46; --c3:#b4502a; --c4:#6b46c1;
-  color-scheme:light;
-}}
-:root[data-theme="light"]{
-  --bg:#f2f3f6; --surface:#ffffff; --raise:#e8eaef; --line:#d3d7df;
-  --ink:#171a20; --muted:#59626f;
-  --gold:#8a6508; --on-gold:#ffffff; --good:#1f7a46; --warn:#a4561a;
-  --c0:#8a6508; --c1:#2566b0; --c2:#1f7a46; --c3:#b4502a; --c4:#6b46c1;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -31,74 +18,93 @@ html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
 button,input,textarea{font:inherit;color:inherit}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.k0{--c:var(--c0)}.k1{--c:var(--c1)}.k2{--c:var(--c2)}.k3{--c:var(--c3)}.k4{--c:var(--c4)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.k0{--c:var(--c0);--on:#141a2e}.k1{--c:var(--c1);--on:#fff}.k2{--c:var(--c2);--on:#fff}.k3{--c:var(--c3);--on:#fff}.k4{--c:var(--c4);--on:#fff}
+.k0,.k1,.k2,.k3,.k4{--ct:color-mix(in srgb,var(--c) 58%,#141a2e);--tint:color-mix(in srgb,var(--c) 9%,#fff);--tint2:color-mix(in srgb,var(--c) 22%,#fff)}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-.shell{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:100%}
+.shell{display:grid;grid-template-columns:316px minmax(0,1fr);min-height:100%}
 
 /* rail */
 .side{background:var(--surface);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-block:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:14px}
-.brand{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none}
-.brand b{font:600 18px var(--body);letter-spacing:.02em}
-.brand span{font:400 12px var(--mono);color:var(--muted)}
-.search{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo{display:grid;grid-template-columns:repeat(5,6px);gap:2px}
+.logo i{height:18px;border-radius:2px}
+.brand b{font:700 19px var(--display);letter-spacing:-.01em}
+.search{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
 .navlinks{display:flex;gap:6px}
-.navlinks a{flex:1;text-align:center;text-decoration:none;font-size:14px;font-weight:500;padding:7px 8px;border:1px solid var(--line);border-radius:6px;background:var(--raise)}
-.navlinks a.sel{border-color:var(--gold);color:var(--gold)}
+.navlinks a{flex:1;text-align:center;text-decoration:none;font-size:14px;font-weight:500;padding:7px 8px;border:1px solid var(--line);border-radius:8px}
+.navlinks a:hover{background:var(--raise)}
+.navlinks a.sel{background:var(--ink);border-color:var(--ink);color:#fff}
 .chs{display:flex;flex-direction:column;gap:6px;flex:1}
-.ch summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 6px;border-radius:6px}
+.ch summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 6px;border-radius:8px}
 .ch summary::-webkit-details-marker{display:none}
-.ch summary:hover{background:var(--raise)}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.ch summary:hover{background:var(--tint)}
+.chn{font:700 11px var(--mono);width:20px;height:20px;border-radius:5px;background:var(--c);color:var(--on);display:grid;place-items:center}
 .ch-name{font-weight:600;font-size:14px}
 .ch-count{font:400 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
 .ch-bar{grid-column:1/-1;height:3px;border-radius:2px;background:var(--raise);overflow:hidden}
 .ch-bar i{display:block;height:100%;background:var(--c);transition:width .25s}
 .rows{list-style:none;margin:2px 0 6px;padding:0}
-.row{display:grid;grid-template-columns:18px 22px minmax(0,1fr);gap:6px;align-items:start;padding:6px;border-radius:6px;text-decoration:none;font-size:13.5px;line-height:1.35;color:var(--muted)}
-.row:hover{background:var(--raise);color:var(--ink)}
-.row.sel{background:var(--raise);color:var(--ink);box-shadow:inset 2px 0 0 var(--c)}
-.row.now .rn{color:var(--c)}
+.row{display:grid;grid-template-columns:18px 22px minmax(0,1fr);gap:6px;align-items:start;padding:6px;border-radius:8px;text-decoration:none;font-size:13.5px;line-height:1.35;color:var(--muted)}
+.row:hover{background:var(--tint);color:var(--ink)}
+.row.sel{background:var(--tint2);color:var(--ink);font-weight:500}
+.row.now .rn{color:var(--ct);font-weight:500}
+.row.over{grid-template-columns:minmax(0,1fr);font:500 12px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--ct)}
 .rn{font:400 12px/1.5 var(--mono);font-variant-numeric:tabular-nums}
-.tick{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--muted);margin-top:2px;position:relative}
+.tick{width:14px;height:14px;border-radius:50%;border:1.5px solid #aab1c2;margin-top:2px;position:relative}
 .row.part .tick{border-color:var(--c);background:linear-gradient(90deg,var(--c) 50%,transparent 50%)}
 .row.done .tick{border-color:var(--good);background:var(--good)}
-.row.done .tick::after{content:'';position:absolute;left:3.5px;top:1px;width:3px;height:6px;border:solid var(--bg);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+.row.done .tick::after{content:'';position:absolute;left:3.5px;top:1px;width:3px;height:6px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
 .row.done{color:var(--ink)}
 .empty{font-size:13px;color:var(--muted);padding:6px}
 .status{font:400 12px var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
 
 /* main */
 .main{padding-block:28px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
-.inner{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.inner{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
 .topbar{display:none}
-.eyebrow{font:500 12px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--c,var(--gold))}
-h1{font:600 clamp(26px,4.6vw,42px)/1.1 var(--body);margin:6px 0 0;text-wrap:balance}
+.eyebrow{font:500 12px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ct,var(--muted))}
+h1{font:700 clamp(30px,5.2vw,52px)/1.02 var(--display);letter-spacing:-.02em;margin:6px 0 0;text-wrap:balance}
 h2{font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-.lede{margin:8px 0 0;color:var(--muted);max-width:62ch}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-.btn{background:var(--raise);border:1px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{border-color:var(--muted)}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+.lede{margin:10px 0 0;color:var(--muted);max-width:64ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.primary:hover{background:#263055}
 .btn.primary.is-done{background:var(--good);border-color:var(--good)}
 .btn.sm{padding:5px 10px;font-size:13px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.meter{height:6px;border-radius:3px;background:var(--raise);overflow:hidden}
-.meter i{display:block;height:100%;background:var(--c,var(--gold));border-radius:3px;transition:width .25s}
+.meter{height:7px;border-radius:4px;background:var(--raise);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--c,var(--ink));border-radius:4px;transition:width .25s}
+.badge{display:inline-block;font:500 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 7px;border-radius:5px;background:var(--raise);color:var(--muted)}
+.badge.rec{background:var(--c);color:var(--on)}
+.badge.core{background:var(--ink);color:#fff}
+
+/* week map */
+.map{display:grid;grid-template-columns:repeat(21,minmax(0,1fr));gap:5px}
+.cell{aspect-ratio:1;border-radius:7px;display:grid;place-items:center;text-decoration:none;font:500 12px var(--mono);font-variant-numeric:tabular-nums;color:var(--ct);border:1.5px solid transparent;transition:transform .12s}
+.cell:hover{transform:translateY(-2px);border-color:var(--c)}
+.cell.done{background:var(--c)!important;color:var(--on)}
+.cell.now{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:13px}
+.legend a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--muted)}
+.legend a:hover{color:var(--ink)}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--c)}
 
 /* dashboard */
-.focus{border-left:3px solid var(--c);display:flex;flex-direction:column;gap:12px;padding:20px}
-.focus h3{font:600 clamp(20px,3vw,26px)/1.2 var(--body);margin:0;text-wrap:balance}
-.focus p{margin:0;color:var(--muted)}
-.focus p b{color:var(--ink);font-weight:500}
+.focus{background:var(--tint);border-color:var(--tint2);display:flex;flex-direction:column;gap:12px;padding:22px}
+.focus h3{font:700 clamp(22px,3.2vw,30px)/1.12 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.focus p{margin:0}
 .focus-top{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;align-items:baseline}
 .focus-top span:last-child{font:400 13px var(--mono);color:var(--muted)}
 .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 24px;font:400 13px var(--mono);color:var(--muted)}
 .duo>div{display:flex;flex-direction:column;gap:6px}
+.focus .meter{background:var(--surface)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .tile .k{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.tile .v{font:500 28px/1.25 var(--mono);font-variant-numeric:tabular-nums;margin-top:4px}
+.tile .v{font:700 32px/1.2 var(--display);font-variant-numeric:tabular-nums;margin-top:4px}
 .tile .s{font-size:13px;color:var(--muted)}
 .tile .s.ahead{color:var(--good)}.tile .s.behind{color:var(--warn)}
 .chart svg{width:100%;height:auto;display:block}
@@ -110,73 +116,107 @@ h2{font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;c
 .chart .bar.cur{stroke:var(--ink);stroke-width:1.5}
 .chart a:hover .bar,.chart a:focus .bar{stroke:var(--ink);stroke-width:1.5}
 .note-s{font-size:13px;color:var(--muted);margin:8px 0 0}
-.chcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
-.chcard{text-decoration:none;display:flex;flex-direction:column;gap:8px;border-top:3px solid var(--c)}
-.chcard:hover{border-color:var(--c);background:var(--raise)}
-.chcard b{font-size:17px;font-weight:600}
+.chcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.chcard{text-decoration:none;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:transform .12s,border-color .12s}
+.chcard:hover{border-color:var(--c);transform:translateY(-2px)}
+.chcard .big{position:absolute;right:10px;top:-14px;font:700 92px/1 var(--display);color:var(--tint2);pointer-events:none}
+.chcard b{font:700 20px/1.15 var(--display);position:relative;max-width:11em}
 .chcard .meta{display:flex;justify-content:space-between;font:400 12px var(--mono);color:var(--muted)}
 .chcard .next{font-size:13.5px;color:var(--muted)}
 .miles{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
-.miles a{font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);display:flex;gap:6px;align-items:center;text-decoration:none}
-.miles a::before{content:'';width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted)}
+.miles a{font-size:13px;padding:6px 11px;border:1px solid var(--line);background:var(--surface);border-radius:999px;color:var(--muted);display:flex;gap:6px;align-items:center;text-decoration:none}
+.miles a::before{content:'';width:8px;height:8px;border-radius:50%;border:1.5px solid #aab1c2}
 .miles a.on{color:var(--ink);border-color:var(--good)}
 .miles a.on::before{background:var(--good);border-color:var(--good)}
+.cmd{display:flex;gap:8px;align-items:center;margin-top:6px;background:var(--ink);border-radius:8px;padding:6px 6px 6px 12px;min-width:0}
+.cmd code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;font:400 13px var(--mono);color:#e8ecf8}
+.cmd .btn{flex:none}
+.hint{font-size:13px;color:var(--muted);margin-top:4px}
+.hint a,.links a{color:var(--ct,#2f55c8)}
+
+/* chapter and week headers */
+.hero{background:var(--tint);border:1px solid var(--tint2);border-radius:18px;padding:26px 24px;position:relative;overflow:hidden}
+.hero .big{position:absolute;right:16px;bottom:-34px;font:700 190px/1 var(--display);letter-spacing:-.04em;color:var(--tint2);pointer-events:none;user-select:none}
+.hero>*:not(.big){position:relative}
+.hero h1{max-width:15em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:14px;font:400 13px var(--mono);color:var(--muted)}
+.hero .goal{margin:16px 0 0;max-width:56ch;font-size:17px}
+.hero .goal span{display:block;font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ct)}
+.hl{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.wl{list-style:none;margin:0;padding:0}
+.wl a{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:11px 6px;border-top:1px solid var(--line);text-decoration:none}
+.wl li:first-child a{border-top:0}
+.wl a:hover{background:var(--tint)}
+.wl .n{font:500 15px var(--mono);color:var(--ct)}
+.wl .st{font:400 12px var(--mono);color:var(--muted);white-space:nowrap}
+.wl .t{font-weight:500}
+.wl .t .badge{margin-left:8px;vertical-align:1px}
+.wl .done .t{color:var(--muted)}
 
 /* week workspace */
-.goalbox{border-left:3px solid var(--c);padding:12px 16px;background:var(--surface);border-radius:0 8px 8px 0}
-.goalbox span{display:block;font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .cols{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px;align-items:start}
 .steps{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:2px}
-.step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:8px 6px;border-radius:6px}
-.step:hover{background:var(--raise)}
+.step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:8px 6px;border-radius:8px}
+.step:hover{background:var(--tint,var(--raise))}
 .step input{width:18px;height:18px;margin-top:3px;accent-color:var(--good)}
 .step label{cursor:pointer;overflow-wrap:anywhere}
 .step.on label{color:var(--muted);text-decoration:line-through}
 .x{background:none;border:0;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:4px;font-size:15px;line-height:1}
-.x:hover{color:var(--warn);background:var(--bg)}
+.x:hover{color:var(--warn);background:var(--raise)}
 .addrow{display:flex;gap:8px}
-.addrow input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:14px}
+.addrow input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
 .head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .head span{font:400 12px var(--mono);color:var(--muted)}
-.hrs{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.hrs input{width:84px;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 6px;font:500 18px var(--mono)}
+.hrs{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.hrs input{width:84px;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 6px;font:500 18px var(--mono)}
 .hrs .btn{padding:7px 12px}
 .timer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
-.clock{font:500 22px var(--mono);font-variant-numeric:tabular-nums}
+.clock{font:500 22px var(--mono);font-variant-numeric:tabular-nums;color:var(--muted)}
 .clock.run{color:var(--good)}
+.links{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14.5px}
 .sum{display:flex;flex-direction:column;gap:12px}
 .sum label{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:4px}
-textarea{width:100%;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px;line-height:1.5}
+textarea{width:100%;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;line-height:1.5}
+textarea:focus,input:focus{background:var(--surface)}
 .sum textarea{min-height:44px}
 #notes{min-height:150px}
 .pager{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
-.pager .btn{max-width:100%}
 
 /* journal */
-.entry{display:flex;flex-direction:column;gap:8px}
-.entry h3{margin:0;font-size:17px;font-weight:600}
+.entry{display:flex;flex-direction:column;gap:8px;border-left:4px solid var(--c)}
+.entry h3{margin:0;font:700 19px/1.2 var(--display)}
 .entry dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;font-size:14.5px}
 .entry dt{color:var(--muted);font-size:13px;padding-top:1px}
 .entry dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .entry pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:400 14.5px/1.5 var(--body);border-top:1px solid var(--line);padding-top:8px}
 
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
 @media (max-width:860px){
   .shell{display:block}
-  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-  .topbar b{font-weight:600}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+  .topbar b{font:700 17px var(--display)}
   .topbar span{margin-left:auto;font:400 12px var(--mono);color:var(--muted)}
   .side{position:fixed;inset:0 auto 0 0;width:min(320px,88vw);z-index:20;transform:translateX(-102%);transition:transform .2s;padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
-  .nav-open .side{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}
+  .nav-open .side{transform:none;box-shadow:0 0 0 100vmax rgba(20,26,46,.45)}
   .main{padding-top:20px}
   .cols{grid-template-columns:minmax(0,1fr)}
+  .map{grid-template-columns:repeat(14,minmax(0,1fr))}
+  .hero .big{font-size:120px;bottom:-22px;opacity:.7}
+}
+@media (max-width:520px){
+  .map{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .hero{padding:20px 16px}
+  .wl a{grid-template-columns:30px minmax(0,1fr)}
+  .wl .st{grid-column:2}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="shell">
   <nav class="side" id="side" aria-label="Curriculum">
-    <a class="brand" href="#home"><b>ARENA Tracker</b><span>42 weeks</span></a>
+    <a class="brand" href="#home"><span class="logo" aria-hidden="true"><i style="background:var(--c0)"></i><i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i><i style="background:var(--c4)"></i></span><b>ARENA Tracker</b></a>
     <input class="search" id="q" type="search" placeholder="Search weeks and notes  /" aria-label="Search weeks and notes" autocomplete="off">
     <div class="navlinks"><a href="#home" id="nav-home">Dashboard</a><a href="#journal" id="nav-journal">Journal</a></div>
     <div class="chs" id="chs"></div>
@@ -190,69 +230,113 @@ textarea{width:100%;resize:vertical;background:var(--bg);border:1px solid var(--
     <main class="main"><div class="inner" id="view"></div></main>
   </div>
 </div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <script>
 (function(){
 'use strict';
 var START=new Date(2026,10,16), DAY=864e5, TARGET=11, KEY='arena-tracker-v2', TKEY='arena-timer-v1';
 var SITE='https://learn.arena.education/';
+var REPO='https://github.com/ARENA-education/ARENA_materials';
+var SLACK='https://info-arena.github.io/ARENA_img/slack.html';
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var CH=[
- {id:0,name:'Fundamentals',from:1,to:7},
- {id:1,name:'Transformer Interpretability',from:8,to:24},
- {id:2,name:'Reinforcement Learning',from:25,to:30},
- {id:3,name:'LLM Evaluations',from:31,to:36},
- {id:4,name:'Alignment Science',from:37,to:42}
+ {id:0,name:'Fundamentals',from:1,to:7,url:SITE+'chapter0_fundamentals/',
+  desc:'A grounding in everything the later chapters lean on. All of this chapter is compulsory.',
+  hi:['Build your own 1D and 2D convolution functions','Build a ResNet, load pretrained weights into it and finetune it on a classification task','Use Weights & Biases to optimise hyperparameters','Implement your own backpropagation mechanism','Build your own GANs and VAEs and generate images with them']},
+ {id:1,name:'Transformer Interpretability',from:8,to:24,url:SITE+'chapter1_transformer_interp/',
+  desc:'Transformers, then mechanistic interpretability. Only 1.1 and 1.2 are compulsory. After those, the ten sets in 1.3 Probing & Representations, 1.4 Circuits in LLMs and 1.5 Toy Models have no prerequisites, so you can pick. ARENA most strongly recommends 1.5.1, 1.4.1 and 1.3.3.',
+  hi:['Build a transformer from scratch and sample autoregressive output from it','Use TransformerLens to locate induction heads in a 2-layer model','Find the indirect object identification circuit in GPT-2 small','Interpret models trained on toy tasks such as bracket strings and modular arithmetic','Replicate the superposition results and train sparse autoencoders to recover features','Use steering vectors to change the behaviour of GPT2-XL','Train linear probes to detect deception, and read a real LLM with SAEs and activation oracles']},
+ {id:2,name:'Reinforcement Learning',from:25,to:30,url:SITE+'chapter2_rl/',
+  desc:'Teaching agents to act in an environment to maximise accumulated reward, with your own experiments in gymnasium environments.',
+  hi:['Build an agent for the multi-armed bandit problem with methods from Sutton & Barto','Implement DQN, Vanilla Policy Gradient and PPO to play CartPole','Watch reward hacking and goal misgeneralisation happen in a gridworld, then use potential-based reward shaping','Apply RLHF to an autoregressive transformer','Train a small language model with verifiable rewards (RLVR) using Dr. GRPO','Implement MCTS and AlphaZero and train a Connect 4 agent from self-play']},
+ {id:3,name:'LLM Evaluations',from:31,to:36,url:SITE+'chapter3_llm_evals/',
+  desc:'How to go from a threat model to an eval: design a multiple-choice benchmark, run it with Inspect, build agents to test capabilities, and test AI control protocols. Written with Apollo Research.',
+  hi:['Design and generate your own MCQ eval with LLMs, using the model-written evals method','Run evaluation experiments with the Inspect library from the UK AI Security Institute','Build an LLM agent that plays the Wikipedia Racing game','Implement ReAct and Reflexion as elicitation methods','Reproduce the backdoor red-team and the monitoring, deferral and editing protocols from AI Control']},
+ {id:4,name:'Alignment Science',from:37,to:42,url:SITE+'chapter4_alignment_science/',
+  desc:'Case studies in misalignment using both white-box techniques on model internals and black-box techniques on behaviour.',
+  hi:['Load model organisms of emergent misalignment, measure them with LLM-as-judge autoraters and steer the misalignment on and off','Replicate the shutdown resistance and alignment faking case studies and test for simpler explanations','Find which chain-of-thought steps matter most, replicating Thought Anchors by resampling and by attention','Map persona space with the Assistant Axis and steer with persona vectors for traits like sycophancy','Build a multi-turn red-teaming agent, then audit models with Petri']}
 ];
 var W=[
  [1,'NumPy basics, einops tutorial, ARENA 0.0 Prerequisites','You predict any tensor shape before running the line',['Work through NumPy basics','Finish the einops tutorial','0.0: einops and einsum exercises','0.0: tensor indexing exercises']],
  [2,'PyTorch "Learn the Basics", Karpathy micrograd lecture','You write a training loop from memory',['PyTorch basics: tensors, datasets, autograd','PyTorch basics: build, optimise and save a model','Watch Karpathy\'s micrograd lecture','Rewrite a training loop without looking']],
  [3,'0.1 Ray Tracing','Broadcasting and batched operations feel normal',['Rays and segments','Batched operations','Triangles','Bonus: video and lighting']],
- [4,'0.2 CNNs & ResNets','You train a classifier and load pretrained ResNet weights',['Making your own modules','Training neural networks','Convolutions','ResNets']],
- [5,'0.3 Optimization','SGD and Adam are implemented and a wandb sweep has run',['Optimizers: SGD, RMSprop, Adam','Weights & Biases sweep','Bonus: distributed training']],
+ [4,'0.2 CNNs & ResNets','You train a classifier and load pretrained ResNet weights',['Making your own modules','Your own 1D and 2D convolution functions','Training a classifier','Build a ResNet and load pretrained weights','Finetune it on a classification task']],
+ [5,'0.3 Optimization','SGD and Adam are implemented and a wandb sweep has run',['Optimizers: SGD, RMSprop, Adam','Weights & Biases hyperparameter sweep','Bonus: distributed training']],
  [6,'0.4 Backprop','Your own autograd engine passes its tests',['Introduction to backprop','Autograd','More forward and backward functions','Putting everything together']],
- [7,'0.5 VAEs & GANs','Both generate images, and you can say how they differ',['Autoencoders and VAEs','GANs','Bonus: transposed convolutions','Write down how the two differ']],
+ [7,'0.5 VAEs & GANs','Both generate images, and you can say how they differ',['Autoencoders and VAEs','GANs','Generate images with both','Write down how the two differ']],
  [8,'1.1 Transformers from Scratch, part 1','Attention and the transformer block are built and tested',['Understanding inputs and outputs','LayerNorm, embedding and positional embedding','Attention','MLP and the transformer block']],
- [9,'1.1 Transformers from Scratch, part 2','Your GPT-2 trains and samples text',['Unembedding and the full transformer','Training a transformer','Sampling: greedy, temperature, top-k, top-p','Bonus: beam search and caching']],
+ [9,'1.1 Transformers from Scratch, part 2','Your GPT-2 trains and samples text',['Unembedding and the full transformer','Training a transformer','Sampling autoregressive output: greedy, temperature, top-k, top-p','Bonus: beam search and caching']],
  [10,'1.2 Intro to Mech Interp, part 1','TransformerLens runs and you can read an activation cache',['TransformerLens: loading and running models','Caching activations','Finding induction heads from attention patterns']],
  [11,'1.2 Intro to Mech Interp, part 2','You find induction heads in a 2-layer model',['TransformerLens hooks','Logit attribution and ablations','Reverse-engineering induction circuits']],
- [12,'1.3.1 Linear Probes','A probing result is replicated',['Collect activations for a labelled dataset','Train a linear probe','Test the probe with a control or an intervention']],
- [13,'1.3.2 Function Vectors & Model Steering','A steering vector changes a model\'s behaviour',['Introduction to nnsight','Task-encoding hidden states','Function vectors','Steering vectors']],
- [14,'1.3.3 Interpretability with SAEs, part 1','SAEs load and you can inspect features',['Load SAEs with SAELens','Read feature dashboards','Find features for a prompt']],
- [15,'1.3.3 Interpretability with SAEs, part 2','A feature is interpreted and steered with',['Understanding latents: a deeper dive','Steer with a feature','Training and evaluating SAEs']],
- [16,'1.3.4 Activation Oracles','Oracle-based model diffing runs end to end',['Set up the oracle and the target model','Query activations in natural language','Run model diffing end to end']],
+ [12,'1.3.1 Linear Probes','A probing result is replicated',['Collect activations for a labelled dataset','Train a linear probe to detect deception','Check the probe on held-out examples']],
+ [13,'1.3.2 Function Vectors & Model Steering','A steering vector changes a model\'s behaviour',['Extract task-encoding hidden states','Function vectors','Steering vectors in GPT2-XL']],
+ [14,'1.3.3 Interpretability with SAEs, part 1','SAEs load and you can inspect features',['Load pretrained SAEs','Read feature dashboards','Find the features active on a prompt']],
+ [15,'1.3.3 Interpretability with SAEs, part 2','A feature is interpreted and steered with',['Interpret one feature in depth','Steer with a feature','Train and evaluate an SAE']],
+ [16,'1.3.4 Activation Oracles','Oracle-based model diffing runs end to end',['Set up the oracle and the target model','Read what the model represents with the oracle','Run model diffing end to end']],
  [17,'1.4.1 Indirect Object Identification, part 1','Name-mover and related heads are found',['Model and task setup','Logit attribution','Activation patching']],
  [18,'1.4.1 Indirect Object Identification, part 2','The IOI circuit is reproduced',['Path patching','Full replication: minimal circuit','Bonus: explore anomalies']],
- [19,'1.4.2 SAE Circuits','A circuit is traced through SAE features',['Latent-to-latent gradients','Transcoders','Trace one circuit through features']],
+ [19,'1.4.2 SAE Circuits','A circuit is traced through SAE features',['Connections between SAE features','Trace one circuit through features','Check the circuit with an intervention']],
  [20,'1.5.1 Balanced Bracket Classifier','You can state the algorithm the model learned',['Bracket classifier setup','Moving backwards from the logits','The total elevation circuit','State the algorithm in your own words']],
  [21,'1.5.2 Grokking & Modular Arithmetic','The modular-addition model is reverse-engineered',['Periodicity and the Fourier basis','Circuits and feature analysis','Analysis during training']],
  [22,'1.5.3 OthelloGPT','You probe and intervene on the board state',['Model setup and linear probes','Looking for modular circuits','Neuron interpretability','Training a probe']],
- [23,'1.5.4 Superposition & SAEs','An SAE is trained on a toy model',['Toy models of superposition','Superposition in a privileged basis','Feature geometry','SAEs in toy models']],
+ [23,'1.5.4 Superposition & SAEs','An SAE is trained on a toy model',['Toy models of superposition','Feature geometry','Train an SAE to recover features from superposition']],
  [24,'Buffer plus one Monthly Algorithmic Problem','Leftover work is finished and one problem is solved unguided',['Finish leftover Chapter 1 work','Pick a Monthly Algorithmic Problem','Solve it without the guide','Write up what the model does']],
- [25,'Intro to RL: bandits and tabular methods','A bandit agent beats the random baseline',['Multi-armed bandit','Tabular RL and policy improvement']],
- [26,'Q-learning and DQN','DQN solves CartPole',['SARSA and Q-learning','Deep Q-Networks','DQN on CartPole']],
- [27,'PPO, part 1','Policy-gradient code passes its tests',['Setting up the agent','Learning phase and the objective function']],
- [28,'PPO, part 2','PPO learns CartPole and a harder environment',['Training loop on CartPole','Atari','MuJoCo']],
- [29,'RLHF, including the newer RLVR material','A transformer is fine-tuned against a reward signal',['RLHF on a transformer language model','RLVR material','Fine-tune against your own reward']],
- [30,'MCTS and AlphaZero, plus buffer','Leftover RL work is finished',['MCTS','AlphaZero','Finish leftover RL work']],
- [31,'3.1 Intro to evals and threat modelling','You have a written spec for one property to measure',['Intro to evals','Threat modelling','Write the spec for one property']],
- [32,'3.2 Dataset generation with LLMs','A model-written multiple-choice dataset exists, with a rubric and audit',['Structured outputs and prompting','Generate the dataset','Rubric and quality audit']],
+ [25,'Intro to RL: bandits and tabular methods','A bandit agent beats the random baseline',['Multi-armed bandit agent, Sutton & Barto methods','Tabular RL and policy improvement','Get used to gymnasium environments']],
+ [26,'Q-learning and DQN','DQN solves CartPole',['SARSA and Q-learning','Deep Q-Network','DQN on CartPole']],
+ [27,'PPO, part 1','Policy-gradient code passes its tests',['Vanilla Policy Gradient','PPO: setting up the agent','PPO: the objective function']],
+ [28,'PPO, part 2','PPO learns CartPole and a harder environment',['PPO training loop on CartPole','Reward hacking and goal misgeneralisation in a gridworld','Potential-based reward shaping','A harder environment']],
+ [29,'RLHF, including the newer RLVR material','A transformer is fine-tuned against a reward signal',['RLHF on an autoregressive transformer','RLVR: train a small language model with Dr. GRPO']],
+ [30,'MCTS and AlphaZero, plus buffer','Leftover RL work is finished',['MCTS','AlphaZero','Train a Connect 4 agent from self-play','Finish leftover RL work']],
+ [31,'3.1 Intro to evals and threat modelling','You have a written spec for one property to measure',['What evals are for','Threat modelling','Write the spec for one property']],
+ [32,'3.2 Dataset generation with LLMs','A model-written multiple-choice dataset exists, with a rubric and audit',['Design MCQ questions by hand','Generate the dataset with an LLM','Rubric and quality audit']],
  [33,'3.3 Running evals with Inspect','Your eval runs end to end in Inspect',['Intro to Inspect','Writing solvers','Writing tasks and running the eval','Read the logs']],
- [34,'3.4 LLM agents','A Wikipedia Racing agent works with ReAct and Reflexion',['Intro to LLM agents','Simple arithmetic agent','Wikipedia Racing agent','Elicitation: ReAct and Reflexion']],
- [35,'3.5 AI Control','Two control protocols are implemented and compared',['Set up the trusted and untrusted models','First control protocol','Second control protocol','Compare safety against usefulness']],
+ [34,'3.4 LLM agents','A Wikipedia Racing agent works with ReAct and Reflexion',['Intro to LLM agents and scaffolding','Wikipedia Racing agent','Elicitation: ReAct','Elicitation: Reflexion']],
+ [35,'3.5 AI Control','Two control protocols are implemented and compared',['Backdoor red-team','Monitoring protocol','Deferral and editing protocols','Compare safety against usefulness']],
  [36,'Buffer and polish','Your eval is cleaned up into something you can show',['Finish leftover Chapter 3 work','Clean up the eval code','Write a short README with results']],
- [37,'4.1 Emergent Misalignment','You run a LoRA finetune and score it with an autorater',['Run the LoRA finetune','Build the autorater','Score and compare the models']],
- [38,'4.2 Science of Misalignment','Both case studies (shutdown resistance, alignment faking) are worked through',['Case study: shutdown resistance','Case study: alignment faking']],
- [39,'4.3 Interpreting Reasoning Models','Thought Anchors is replicated on a reasoning trace',['Collect a reasoning trace','Measure sentence importance','Replicate Thought Anchors']],
- [40,'4.4 LLM Psychology & Persona Vectors','A persona-vector extraction pipeline runs',['Build contrastive prompts','Extract persona vectors','Steer or monitor with the vector']],
- [41,'4.5 Investigator Agents','An agent probes a target model for a hidden behaviour',['Set up the target model','Build the investigator agent','Run the investigation and grade it']],
+ [37,'4.1 Emergent Misalignment','You run a LoRA finetune and score it with an autorater',['Load the model organisms of emergent misalignment','Measure misalignment with an LLM-as-judge autorater','Steer it on and off with activation steering']],
+ [38,'4.2 Science of Misalignment','Both case studies (shutdown resistance, alignment faking) are worked through',['Case study: shutdown resistance','Case study: alignment faking','Test for a simpler explanation than genuine misalignment']],
+ [39,'4.3 Interpreting Reasoning Models','Thought Anchors is replicated on a reasoning trace',['Find important steps by resampling','Find important steps with attention-based methods','Replicate Thought Anchors on one trace']],
+ [40,'4.4 LLM Psychology & Persona Vectors','A persona-vector extraction pipeline runs',['Map persona space with the Assistant Axis','Extract a persona vector, for example sycophancy','Steer with the persona vector']],
+ [41,'4.5 Investigator Agents','An agent probes a target model for a hidden behaviour',['Build a multi-turn red-teaming agent','Audit a model with Petri','Write down what the audit found']],
  [42,'Mini-capstone','A short write-up extends one set toward your own research',['Pick the exercise set to extend','Run the extension','Write it up']]
+];
+var READ={
+ 5:[['Weights & Biases','https://wandb.ai/site']],
+ 10:[['TransformerLens','https://github.com/TransformerLensOrg/TransformerLens']],
+ 11:[['TransformerLens','https://github.com/TransformerLensOrg/TransformerLens']],
+ 13:[['Steering GPT-2-XL by adding an activation vector','https://www.lesswrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector']],
+ 17:[['Interpretability in the Wild (IOI paper)','https://arxiv.org/abs/2211.00593']],
+ 18:[['Interpretability in the Wild (IOI paper)','https://arxiv.org/abs/2211.00593']],
+ 23:[['Toy Models of Superposition','https://transformer-circuits.pub/2022/toy_model/index.html']],
+ 25:[['Sutton & Barto, Reinforcement Learning','https://www.andrew.cmu.edu/course/10-703/textbook/BartoSutton.pdf']],
+ 32:[['Model-written evals paper','https://arxiv.org/abs/2212.09251']],
+ 33:[['Inspect documentation','https://inspect.aisi.org.uk/']],
+ 35:[['AI Control paper','https://arxiv.org/abs/2312.06942']],
+ 37:[['Model organisms of emergent misalignment','https://arxiv.org/abs/2506.11613']],
+ 38:[['Shutdown resistance','https://arxiv.org/abs/2509.14260'],['Alignment faking','https://arxiv.org/abs/2412.14093']],
+ 39:[['Thought Anchors','https://arxiv.org/abs/2506.19143']],
+ 40:[['The Assistant Axis','https://www.anthropic.com/research/assistant-axis'],['Persona vectors','https://www.anthropic.com/research/persona-vectors']],
+ 41:[['Petri','https://alignment.anthropic.com/2025/petri/']]
+};
+var SETUP=[
+ {t:'Clone the ARENA_materials repo',code:'git clone https://github.com/ARENA-education/ARENA_materials.git'},
+ {t:'Run the uv install script',code:'bash ARENA_materials/install_uv.sh',hint:'It creates the environment at ARENA_materials/.venv. If it fails, fall back to: bash ARENA_materials/install.sh'},
+ {t:'Join the ARENA Slack',hint:'<a href="'+SLACK+'" target="_blank" rel="noopener">Slack invite page</a>. Report errors in the material in #errata.'},
+ {t:'Skim the Chapter 0 overview',hint:'<a href="'+SITE+'chapter0_fundamentals/" target="_blank" rel="noopener">Chapter 0 on ARENA</a>'}
 ];
 var MILES=[
  {w:7,t:'Chapter 0 done'},{w:9,t:'GPT-2 built'},{w:11,t:'Induction heads found'},{w:18,t:'IOI circuit reproduced'},
  {w:24,t:'Chapter 1 done'},{w:30,t:'Chapter 2 done'},{w:36,t:'Chapter 3 done'},{w:42,t:'Capstone written'}
 ];
 var SUM=['What I built','What broke','What clicked','Still fuzzy','What is next'];
+var REC={14:1,15:1,17:1,18:1,20:1};
+function tag(n){
+  if(n<=11)return '<span class="badge core">Compulsory</span>';
+  if(REC[n])return '<span class="badge rec">ARENA recommends</span>';
+  if(n>=12&&n<=23)return '<span class="badge">Optional pick</span>';
+  return '';
+}
 
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -271,11 +355,12 @@ function curWeek(){return Math.floor(daysFromStart()/7)+1;}
 function focusWeek(){return Math.min(42,Math.max(1,curWeek()));}
 function chapterOf(n){for(var i=0;i<CH.length;i++){if(n>=CH[i].from&&n<=CH[i].to)return CH[i];}return CH[0];}
 
-/* state: S.w[n] = {d:1, h:hours, c:{stepKey:1}, x:[{i,t}], s:[5 strings], n:notes, t:timestamp} */
+/* state: S.w[n] = {d:1, h:hours, c:{stepKey:1}, x:[{i,t}], s:[5 strings], n:notes, t:timestamp}. Week 0 holds the setup checklist. */
 var S={w:{}};
 function gw(n){return S.w[n]||{};}
 function steps(n){
-  var a=W[n-1][3].map(function(t,i){return {k:'s'+i,t:t};});
+  var seed=n?W[n-1][3]:SETUP.map(function(s){return s.t;});
+  var a=seed.map(function(t,i){return {k:'s'+i,t:t};});
   (gw(n).x||[]).forEach(function(o){a.push({k:o.i,t:o.t,custom:true});});
   return a;
 }
@@ -318,7 +403,7 @@ function adopt(snap){
   snap.docs.forEach(function(d){
     var m=/^w(\d+)$/.exec(d.id),o=d.data();
     if(!m||!o)return;
-    var n=+m[1];if(n<1||n>42)return;
+    var n=+m[1];if(n<0||n>42)return;
     if((o.t||0)>(gw(n).t||0)){S.w[n]=o;changed=true;}
   });
   if(changed){saveLocal();render();}
@@ -356,42 +441,61 @@ setInterval(function(){
   $('#top-info').textContent=T?'Timer '+clockText():'';
 },1000);
 
+/* a short burst of chapter-coloured squares when a week is finished */
+function burst(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var cv=$('#fx'),cx=cv.getContext('2d'),w=cv.width=innerWidth,h=cv.height=innerHeight;
+  var cols=['#f2a900','#2f6fed','#12a36b','#f0562e','#8b4be8'],ps=[],i,t0=performance.now();
+  for(i=0;i<70;i++)ps.push({x:w/2+(Math.random()-.5)*w*.5,y:h*.3,vx:(Math.random()-.5)*9,vy:-Math.random()*9-3,s:5+Math.random()*7,c:cols[i%5],r:Math.random()*6});
+  (function frame(now){
+    var el=now-t0;cx.clearRect(0,0,w,h);
+    if(el>1600)return;
+    cx.globalAlpha=Math.max(0,1-el/1600);
+    ps.forEach(function(p){p.vy+=.32;p.x+=p.vx;p.y+=p.vy;p.r+=.1;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/2,p.s,p.s);cx.restore();});
+    requestAnimationFrame(frame);
+  })(t0);
+}
+
 /* route */
 function route(){
   var h=(location.hash||'').replace('#','');
   var m=/^w(\d+)$/.exec(h);
   if(m&&+m[1]>=1&&+m[1]<=42)return {v:'week',n:+m[1]};
+  m=/^ch([0-4])$/.exec(h);
+  if(m)return {v:'chapter',c:+m[1]};
   if(h==='journal')return {v:'journal'};
   return {v:'home'};
 }
 
 /* rail */
-var query='';
+var query='',openCh={};
 function matches(n){
   if(!query)return true;
   var g=gw(n),w=W[n-1];
   var hay=[w[1],w[2],'week '+n,steps(n).map(function(s){return s.t;}).join(' '),g.n||'',(g.s||[]).join(' ')].join(' ').toLowerCase();
   return hay.indexOf(query)>=0;
 }
+function rowState(n){var g=gw(n),st=stepStat(n);return g.d?' done':(st.d||g.h||hasText(g)?' part':'');}
 function buildSide(){
   var r=route(),cw=curWeek(),html='',any=false;
   CH.forEach(function(c){
     var rows='',dn=0,tot=c.to-c.from+1;
     for(var n=c.from;n<=c.to;n++){
-      var g=gw(n),st=stepStat(n);if(g.d)dn++;
+      if(gw(n).d)dn++;
       if(!matches(n))continue;
-      var cls='row'+(g.d?' done':(st.d||g.h||hasText(g)?' part':''))+(n===cw?' now':'')+(r.v==='week'&&r.n===n?' sel':'');
-      rows+='<li><a class="'+cls+'" href="#w'+n+'"'+(r.v==='week'&&r.n===n?' aria-current="page"':'')+'><span class="tick"></span><span class="rn">'+pad2(n)+'</span><span>'+esc(W[n-1][1])+'</span></a></li>';
+      var sel=r.v==='week'&&r.n===n;
+      rows+='<li><a class="row'+rowState(n)+(n===cw?' now':'')+(sel?' sel':'')+'" href="#w'+n+'"'+(sel?' aria-current="page"':'')+'><span class="tick"></span><span class="rn">'+pad2(n)+'</span><span>'+esc(W[n-1][1])+'</span></a></li>';
     }
     if(query&&!rows)return;
     any=true;
-    var open=query||(r.v==='week'?chapterOf(r.n).id===c.id:chapterOf(focusWeek()).id===c.id)||openCh[c.id];
-    html+='<details class="ch k'+c.id+'" data-ch="'+c.id+'"'+(open?' open':'')+'><summary><span class="dot"></span><span class="ch-name">'+esc(c.name)+'</span><span class="ch-count">'+dn+'/'+tot+'</span><span class="ch-bar"><i style="width:'+(dn/tot*100)+'%"></i></span></summary><ul class="rows">'+rows+'</ul></details>';
+    var here=r.v==='week'?chapterOf(r.n).id===c.id:(r.v==='chapter'?r.c===c.id:chapterOf(focusWeek()).id===c.id);
+    var open=query||here||openCh[c.id];
+    var over=query?'':'<li><a class="row over'+(r.v==='chapter'&&r.c===c.id?' sel':'')+'" href="#ch'+c.id+'">Chapter overview</a></li>';
+    html+='<details class="ch k'+c.id+'" data-ch="'+c.id+'"'+(open?' open':'')+'><summary><span class="chn">'+c.id+'</span><span class="ch-name">'+esc(c.name)+'</span><span class="ch-count">'+dn+'/'+tot+'</span><span class="ch-bar"><i style="width:'+(dn/tot*100)+'%"></i></span></summary><ul class="rows">'+over+rows+'</ul></details>';
   });
   if(!any)html='<div class="empty">No week matches "'+esc(query)+'".</div>';
   return html;
 }
-var openCh={};
 function renderSide(){
   var sc=$('#side').scrollTop;
   $('#chs').innerHTML=buildSide();
@@ -404,11 +508,35 @@ $('#chs').addEventListener('toggle',function(e){
   var d=e.target;if(d.dataset&&d.dataset.ch!=null&&!query)openCh[d.dataset.ch]=d.open;
 },true);
 
-/* dashboard */
+/* shared pieces */
 function totals(){
   var o={done:0,hours:0,sd:0,sn:0};
   for(var n=1;n<=42;n++){var g=gw(n),st=stepStat(n);if(g.d)o.done++;o.hours+=+g.h||0;o.sd+=st.d;o.sn+=st.n;}
   return o;
+}
+function weekMap(){
+  var cw=curWeek(),h='<div class="map">';
+  for(var n=1;n<=42;n++){
+    var g=gw(n),st=stepStat(n),c=chapterOf(n),p=g.d?100:Math.round(10+(st.n?st.d/st.n:0)*45);
+    h+='<a class="cell k'+c.id+(g.d?' done':'')+(n===cw?' now':'')+'" href="#w'+n+'" style="background:color-mix(in srgb,var(--c) '+p+'%,#fff)" title="Week '+n+': '+esc(W[n-1][1])+'" aria-label="Week '+n+', '+esc(W[n-1][1])+', '+(g.d?'done':st.d+' of '+st.n+' steps')+'">'+n+'</a>';
+  }
+  h+='</div><div class="legend">';
+  CH.forEach(function(c){h+='<a class="k'+c.id+'" href="#ch'+c.id+'"><i></i>'+c.id+' '+esc(c.name)+'</a>';});
+  return h+'</div>';
+}
+function stepList(n){
+  var st=steps(n),ck=gw(n).c||{},h='<ul class="steps">';
+  st.forEach(function(s,i){
+    var id='st-'+n+'-'+s.k,ex='';
+    if(!n&&!s.custom){
+      var o=SETUP[i];
+      if(o.code)ex+='<div class="cmd"><code>'+esc(o.code)+'</code><button class="btn sm" type="button" data-act="copycmd" data-v="'+esc(o.code)+'">Copy</button></div>';
+      if(o.hint)ex+='<div class="hint">'+o.hint+'</div>';
+    }
+    h+='<li class="step'+(ck[s.k]?' on':'')+'"><input type="checkbox" id="'+id+'" data-w="'+n+'" data-step="'+esc(s.k)+'"'+(ck[s.k]?' checked':'')+'><div><label for="'+id+'">'+esc(s.t)+'</label>'+ex+'</div>'
+      +(s.custom?'<button class="x" type="button" data-act="rmstep" data-k="'+esc(s.k)+'" aria-label="Remove step: '+esc(s.t)+'">&times;</button>':'<span></span>')+'</li>';
+  });
+  return h+'</ul>';
 }
 function chart(){
   var Wd=840,Ht=150,pl=30,pr=6,pt=10,pb=26,bw=15,gap=(Wd-pl-pr-42*bw)/41,hs=[],n,mx=14,cw=curWeek();
@@ -430,14 +558,18 @@ function chart(){
   });
   return s+'</svg>';
 }
+
+/* dashboard */
 function viewHome(){
   var tt=totals(),days=daysFromStart(),cw=curWeek(),before=days<0,after=cw>42,fw=focusWeek();
-  var g=gw(fw),w=W[fw-1],c=chapterOf(fw),st=stepStat(fw),fh=+g.h||0;
+  var g=gw(fw),w=W[fw-1],c=chapterOf(fw),st=stepStat(fw),fh=+g.h||0,su=stepStat(0);
   var head,lede;
-  if(before){head='Starts Monday 16 Nov';lede='In '+(-days)+' day'+(-days===1?'':'s')+'. Week 1 is NumPy, einops and tensor shapes.';}
+  if(before){head='Starts Monday 16 Nov';lede='In '+(-days)+' day'+(-days===1?'':'s')+'. Use the time to get the environment installed. Week 1 is NumPy, einops and tensor shapes.';}
   else if(after){head='The plan has run its 42 weeks';lede=tt.done+' of 42 weeks ticked off. Use the buffer weeks to close any gaps.';}
   else{head='Week '+cw+' of 42';lede='Tick steps as you finish them, log your hours, and write the five-line summary on Sunday.';}
   var h='<header><div class="eyebrow">ARENA study plan &middot; 16 Nov 2026 to 5 Sep 2027</div><h1>'+head+'</h1><p class="lede">'+lede+'</p></header>';
+
+  h+='<section class="card"><div class="head"><h2>The 42 weeks</h2><span>'+tt.done+' done</span></div>'+weekMap()+'</section>';
 
   h+='<section class="card focus k'+c.id+'"><div class="focus-top"><span class="eyebrow">'+(before?'Up next':(after?'Last week':'This week'))+' &middot; Chapter '+c.id+'</span><span>Week '+fw+' &middot; '+range(fw)+'</span></div>'
     +'<h3>'+esc(w[1])+'</h3><p><b>Done when:</b> '+esc(w[2])+'</p>'
@@ -446,6 +578,9 @@ function viewHome(){
     +'<div class="actions"><a class="btn primary" href="#w'+fw+'">Open week '+fw+'</a>'
     +'<button class="btn" type="button" data-act="addh" data-n="'+fw+'" data-v="1">+1 h</button>'
     +'<button class="btn" type="button" data-act="done" data-n="'+fw+'">'+(g.d?'Week done. Undo':'Mark week done')+'</button></div></section>';
+
+  var setup='<section class="card"><div class="head"><h2>Get set up</h2><span>'+su.d+' of '+su.n+'</span></div>'+stepList(0)+'</section>';
+  if(su.d<su.n)h+=setup;
 
   var pace='&ndash;',ps='Compared from week 2',pc='s';
   if(!before&&cw>=2){
@@ -463,7 +598,7 @@ function viewHome(){
   CH.forEach(function(ch){
     var dn=0,next=0,tot=ch.to-ch.from+1;
     for(var n=ch.from;n<=ch.to;n++){if(gw(n).d)dn++;else if(!next)next=n;}
-    h+='<a class="card chcard k'+ch.id+'" href="#w'+(next||ch.from)+'"><span class="eyebrow">Chapter '+ch.id+'</span><b>'+esc(ch.name)+'</b>'
+    h+='<a class="card chcard k'+ch.id+'" href="#ch'+ch.id+'"><span class="big" aria-hidden="true">'+ch.id+'</span><span class="eyebrow">Chapter '+ch.id+'</span><b>'+esc(ch.name)+'</b>'
       +'<div class="meter"><i style="width:'+(dn/tot*100)+'%"></i></div>'
       +'<div class="meta"><span>Weeks '+ch.from+' to '+ch.to+'</span><span>'+dn+' / '+tot+'</span></div>'
       +'<span class="next">'+(next?'Next: '+esc(W[next-1][1]):'Chapter complete')+'</span></a>';
@@ -471,29 +606,45 @@ function viewHome(){
   h+='</div></section>';
 
   h+='<section class="card chart"><h2>Hours per week</h2>'+chart()+'<p class="note-s">Dashed line is the 11 h core week. Faded bars are under 10 h. Select a bar to open that week.</p></section>';
-
   h+='<section><h2>Milestones</h2><ul class="miles">'+MILES.map(function(m){return '<li><a href="#w'+m.w+'"'+(gw(m.w).d?' class="on"':'')+'>'+esc(m.t)+'</a></li>';}).join('')+'</ul></section>';
+  if(su.d>=su.n)h+=setup;
+  h+='<section><h2>ARENA links</h2><div class="actions"><a class="btn" href="'+SITE+'" target="_blank" rel="noopener">Course site</a><a class="btn" href="'+REPO+'" target="_blank" rel="noopener">ARENA_materials on GitHub</a><a class="btn" href="'+SLACK+'" target="_blank" rel="noopener">Slack invite</a></div><p class="note-s">Found a mistake in the material? Report it in #errata on the Slack.</p></section>';
+  return h;
+}
+
+/* chapter overview */
+function viewChapter(id){
+  var c=CH[id],dn=0,tot=c.to-c.from+1,next=0,n;
+  for(n=c.from;n<=c.to;n++){if(gw(n).d)dn++;else if(!next)next=n;}
+  var h='<header class="hero k'+id+'"><span class="big" aria-hidden="true">'+id+'</span><div class="eyebrow">Chapter '+id+' &middot; Weeks '+c.from+' to '+c.to+' &middot; from '+weekStart(c.from).getDate()+' '+MON[weekStart(c.from).getMonth()]+'</div><h1>'+esc(c.name)+'</h1>'
+    +'<p class="goal">'+esc(c.desc)+'</p>'
+    +'<div class="meta"><span>'+dn+' of '+tot+' weeks done</span></div>'
+    +'<div class="actions" style="margin-top:16px">'+(next?'<a class="btn primary" href="#w'+next+'">'+(dn?'Continue with':'Start')+' week '+next+'</a>':'')+'<a class="btn" href="'+c.url+'" target="_blank" rel="noopener">Open chapter on ARENA</a></div></header>';
+  h+='<section class="card k'+id+'"><h2>What you will build</h2><ul class="hl">'+c.hi.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></section>';
+  h+='<section class="card k'+id+'"><h2>Weeks</h2><ul class="wl">';
+  for(n=c.from;n<=c.to;n++){
+    var st=stepStat(n),g=gw(n);
+    h+='<li><a href="#w'+n+'"'+(g.d?' class="done"':'')+'><span class="n">'+pad2(n)+'</span><span class="t">'+esc(W[n-1][1])+tag(n)+'</span><span class="st">'+(g.d?'Done':st.d+'/'+st.n+' steps')+' &middot; '+range(n)+'</span></a></li>';
+  }
+  h+='</ul></section>';
+  h+='<div class="pager">'+(id>0?'<a class="btn" href="#ch'+(id-1)+'">&larr; Chapter '+(id-1)+'</a>':'<span></span>')+(id<4?'<a class="btn" href="#ch'+(id+1)+'">Chapter '+(id+1)+' &rarr;</a>':'<span></span>')+'</div>';
   return h;
 }
 
 /* week workspace */
 function viewWeek(n){
-  var g=gw(n),w=W[n-1],c=chapterOf(n),st=steps(n),ck=g.c||{},ss=stepStat(n),hv=+g.h||0,sm=g.s||[];
-  var h='<header class="k'+c.id+'"><div class="eyebrow">Chapter '+c.id+' &middot; '+esc(c.name)+' &middot; Week '+n+(n===curWeek()?' &middot; this week':'')+'</div><h1>'+esc(w[1])+'</h1><p class="lede mono">'+range(n)+'</p></header>';
-  h+='<div class="goalbox k'+c.id+'"><span>Done when</span>'+esc(w[2])+'</div>';
-  h+='<div class="actions"><button class="btn primary'+(g.d?' is-done':'')+'" type="button" id="done-btn" data-act="done" data-n="'+n+'" aria-pressed="'+(g.d?'true':'false')+'">'+(g.d?'Week done':(ss.d===ss.n?'All steps ticked. Mark week done':'Mark week done'))+'</button>'
-    +'<a class="btn" href="'+SITE+'" target="_blank" rel="noopener">Open ARENA materials</a></div>';
+  var g=gw(n),w=W[n-1],c=chapterOf(n),ss=stepStat(n),hv=+g.h||0,sm=g.s||[],rd=READ[n]||[];
+  var h='<header class="hero k'+c.id+'"><span class="big" aria-hidden="true">'+pad2(n)+'</span><div class="eyebrow"><a href="#ch'+c.id+'" style="text-decoration:none">Chapter '+c.id+' &middot; '+esc(c.name)+'</a></div><h1>'+esc(w[1])+'</h1>'
+    +'<div class="meta"><span>Week '+n+' &middot; '+range(n)+(n===curWeek()?' &middot; this week':'')+'</span>'+tag(n)+'</div>'
+    +'<p class="goal"><span>Done when</span>'+esc(w[2])+'</p>'
+    +'<div class="actions" style="margin-top:16px"><button class="btn primary'+(g.d?' is-done':'')+'" type="button" id="done-btn" data-act="done" data-n="'+n+'" aria-pressed="'+(g.d?'true':'false')+'">'+(g.d?'Week done':(ss.d===ss.n?'All steps ticked. Mark week done':'Mark week done'))+'</button>'
+    +'<a class="btn" href="'+c.url+'" target="_blank" rel="noopener">Open Chapter '+c.id+' on ARENA</a></div></header>';
 
-  h+='<div class="cols"><section class="card k'+c.id+'"><div class="head"><h2>Steps</h2><span>'+ss.d+' of '+ss.n+'</span></div><ul class="steps">';
-  st.forEach(function(s){
-    var id='st-'+n+'-'+s.k;
-    h+='<li class="step'+(ck[s.k]?' on':'')+'"><input type="checkbox" id="'+id+'" data-step="'+esc(s.k)+'"'+(ck[s.k]?' checked':'')+'><label for="'+id+'">'+esc(s.t)+'</label>'
-      +(s.custom?'<button class="x" type="button" data-act="rmstep" data-k="'+esc(s.k)+'" aria-label="Remove step: '+esc(s.t)+'">&times;</button>':'<span></span>')+'</li>';
-  });
-  h+='</ul><form class="addrow" id="addstep"><input id="newstep" placeholder="Add your own step" aria-label="Add your own step" maxlength="140" autocomplete="off"><button class="btn" type="submit">Add</button></form></section>';
+  h+='<div class="cols"><section class="card k'+c.id+'"><div class="head"><h2>Steps</h2><span>'+ss.d+' of '+ss.n+'</span></div>'+stepList(n)
+    +'<form class="addrow" id="addstep"><input id="newstep" placeholder="Add your own step" aria-label="Add your own step" maxlength="140" autocomplete="off"><button class="btn" type="submit">Add</button></form></section>';
 
   var run=T&&T.w===n;
-  h+='<section class="card k'+c.id+'"><div class="head"><h2>Hours</h2><span id="h-of">'+fmtH(hv)+' of '+TARGET+' h</span></div>'
+  h+='<div style="display:flex;flex-direction:column;gap:16px;min-width:0"><section class="card k'+c.id+'"><div class="head"><h2>Hours</h2><span id="h-of">'+fmtH(hv)+' of '+TARGET+' h</span></div>'
     +'<div class="hrs"><button class="btn" type="button" data-act="addh" data-n="'+n+'" data-v="-0.5" aria-label="Remove half an hour">&minus;</button>'
     +'<input type="number" id="hours" min="0" max="60" step="0.25" inputmode="decimal" aria-label="Hours this week" value="'+(g.h==null?'':g.h)+'" placeholder="0">'
     +'<button class="btn" type="button" data-act="addh" data-n="'+n+'" data-v="0.5" aria-label="Add half an hour">+</button>'
@@ -502,7 +653,9 @@ function viewWeek(n){
     +'<div class="timer"><span class="clock'+(run?' run':'')+'"'+(run?' id="clock"':'')+'>'+(run?clockText():'0:00:00')+'</span>'
     +(run?'<button class="btn" type="button" data-act="tstop">Stop and log time</button>'
          :'<button class="btn" type="button" data-act="tstart" data-n="'+n+'">'+(T?'Timer runs on week '+T.w+'. Switch here':'Start study timer')+'</button>')
-    +'</div></section></div>';
+    +'</div></section>';
+  if(rd.length)h+='<section class="card k'+c.id+'"><h2>Reading</h2><ul class="links">'+rd.map(function(r){return '<li><a href="'+r[1]+'" target="_blank" rel="noopener">'+esc(r[0])+'</a></li>';}).join('')+'</ul></section>';
+  h+='</div></div>';
 
   h+='<section class="card"><h2>Five-line summary</h2><div class="sum">';
   SUM.forEach(function(lb,i){
@@ -510,7 +663,6 @@ function viewWeek(n){
   });
   h+='</div></section>';
   h+='<section class="card"><h2><label for="notes">Notes</label></h2><textarea id="notes" placeholder="Shapes that tripped you up, links, questions to come back to...">'+esc(g.n||'')+'</textarea></section>';
-
   h+='<div class="pager">'+(n>1?'<a class="btn" href="#w'+(n-1)+'">&larr; Week '+(n-1)+'</a>':'<span></span>')+(n<42?'<a class="btn" href="#w'+(n+1)+'">Week '+(n+1)+' &rarr;</a>':'<a class="btn" href="#journal">Journal &rarr;</a>')+'</div>';
   return h;
 }
@@ -529,7 +681,7 @@ function journalText(){
 }
 function viewJournal(){
   var h='<header><div class="eyebrow">Everything you have written</div><h1>Journal</h1><p class="lede">Your summaries and notes, week by week. Use the search box to find a word in any entry.</p></header>';
-  h+='<div class="actions"><button class="btn" type="button" data-act="copy" id="copy">Copy progress as text</button></div>';
+  h+='<div class="actions"><button class="btn" type="button" data-act="copy">Copy progress as text</button></div>';
   var any=false;
   for(var n=1;n<=42;n++){
     var g=gw(n);if(!hasText(g)||!matches(n))continue;
@@ -546,7 +698,7 @@ function viewJournal(){
 function render(){
   var r=route(),a=document.activeElement,fid=a&&a.id&&$('#view').contains(a)?a.id:null,ss=null,se=null;
   if(fid&&a.selectionStart!=null&&a.type!=='number'&&a.type!=='checkbox'){try{ss=a.selectionStart;se=a.selectionEnd;}catch(e){}}
-  $('#view').innerHTML=r.v==='week'?viewWeek(r.n):(r.v==='journal'?viewJournal():viewHome());
+  $('#view').innerHTML=r.v==='week'?viewWeek(r.n):(r.v==='chapter'?viewChapter(r.c):(r.v==='journal'?viewJournal():viewHome()));
   if(fid){var el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(ss!=null){try{el.setSelectionRange(ss,se);}catch(e){}}}}
   grow();renderSide();setStatus();
 }
@@ -557,13 +709,17 @@ function addHours(n,v){
   var h=Math.min(60,Math.max(0,(+gw(n).h||0)+v));
   setW(n,{h:h||null});
 }
+function flash(b,m){var o=b.textContent;b.textContent=m;setTimeout(function(){b.textContent=o;},1800);}
+function copy(b,txt){
+  try{navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied');},function(){flash(b,'Copy is blocked here');});}catch(err){flash(b,'Copy is blocked here');}
+}
 
 /* events */
 var view=$('#view');
 view.addEventListener('click',function(e){
   var b=e.target.closest('[data-act]');if(!b)return;
   var act=b.getAttribute('data-act'),r=route(),n=+b.getAttribute('data-n')||r.n;
-  if(act==='done'){setW(n,{d:gw(n).d?0:1});}
+  if(act==='done'){var was=gw(n).d;setW(n,{d:was?0:1});if(!was)burst();}
   else if(act==='addh'){addHours(n,+b.getAttribute('data-v'));}
   else if(act==='rmstep'){
     var k=b.getAttribute('data-k'),g=gw(n),c=Object.assign({},g.c);delete c[k];
@@ -575,17 +731,15 @@ view.addEventListener('click',function(e){
     var hrs=Math.round((Date.now()-T.start)/36e5*100)/100,tw=T.w;T=null;saveT();
     if(hrs>0)addHours(tw,hrs);else render();
   }
-  else if(act==='copy'){
-    var txt=journalText(),done=function(m){b.textContent=m;setTimeout(function(){b.textContent='Copy progress as text';},2000);};
-    try{navigator.clipboard.writeText(txt).then(function(){done('Copied');},function(){done('Copy is blocked here');});}catch(err){done('Copy is blocked here');}
-  }
+  else if(act==='copy'){copy(b,journalText());}
+  else if(act==='copycmd'){copy(b,b.getAttribute('data-v'));}
 });
 view.addEventListener('change',function(e){
-  var k=e.target.getAttribute('data-step'),r=route();
-  if(k==null||r.v!=='week')return;
-  var c=Object.assign({},gw(r.n).c);
+  var k=e.target.getAttribute('data-step');
+  if(k==null)return;
+  var n=+e.target.getAttribute('data-w'),c=Object.assign({},gw(n).c);
   if(e.target.checked)c[k]=1;else delete c[k];
-  setW(r.n,{c:c});
+  setW(n,{c:c});
 });
 view.addEventListener('input',function(e){
   var r=route(),t=e.target;if(r.v!=='week')return;
@@ -613,9 +767,10 @@ $('#q').addEventListener('input',function(e){
   query=e.target.value.trim().toLowerCase();
   if(route().v==='journal')render();else renderSide();
 });
+function closeNav(){document.body.classList.remove('nav-open');$('#menu').setAttribute('aria-expanded','false');}
 document.addEventListener('keydown',function(e){
   var t=e.target,typing=/^(INPUT|TEXTAREA)$/.test(t.tagName);
-  if(e.key==='Escape'){document.body.classList.remove('nav-open');$('#menu').setAttribute('aria-expanded','false');if(t.id==='q'){t.value='';query='';renderSide();t.blur();}return;}
+  if(e.key==='Escape'){closeNav();if(t.id==='q'){t.value='';query='';renderSide();t.blur();}return;}
   if(typing||e.metaKey||e.ctrlKey||e.altKey)return;
   var r=route();
   if(e.key==='/'){e.preventDefault();document.body.classList.add('nav-open');$('#q').focus();}
@@ -625,11 +780,9 @@ document.addEventListener('keydown',function(e){
 $('#menu').addEventListener('click',function(){
   var o=document.body.classList.toggle('nav-open');this.setAttribute('aria-expanded',o?'true':'false');
 });
-$('#side').addEventListener('click',function(e){
-  if(e.target.closest('a')){document.body.classList.remove('nav-open');$('#menu').setAttribute('aria-expanded','false');}
-});
+$('#side').addEventListener('click',function(e){if(e.target.closest('a'))closeNav();});
 document.addEventListener('click',function(e){
-  if(document.body.classList.contains('nav-open')&&!e.target.closest('#side')&&!e.target.closest('#menu')){document.body.classList.remove('nav-open');$('#menu').setAttribute('aria-expanded','false');}
+  if(document.body.classList.contains('nav-open')&&!e.target.closest('#side')&&!e.target.closest('#menu'))closeNav();
 });
 window.addEventListener('hashchange',function(){render();window.scrollTo(0,0);});
 
